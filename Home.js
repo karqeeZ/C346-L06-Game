@@ -70,16 +70,20 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         backgroundColor: 'greenyellow',
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         borderRadius: 8,
         marginTop: 5,
+        elevation: 5,
+        shadowColor: 'black',
     },
     buttonText: {
         color: 'black',
         fontSize: 16,
         fontWeight: '600',
         paddingHorizontal: 10,
+        alignItems: 'center',
         paddingVertical: 10,
+
     },
     appName: {
         backgroundColor: 'darkslategray',
@@ -88,6 +92,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 20,
     },
+    buttonContainer: {
+        flexDirection: 'row',
+        textAlign: 'left',
+        gap: 12,
+    },
+    edit: {
+        borderRadius: 8,
+        marginTop: 8,
+        backgroundColor: 'white',
+        color: 'black',
+        elevation: 5,
+        shadowColor: 'black',
+        padding: 10,
+    }
 });
 
 const renderSectionHeader = ({ section }) => (
@@ -101,28 +119,32 @@ const renderSectionHeader = ({ section }) => (
 
 const Home = ({navigation}) => {
     // adding to cart alert display
-    // const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState([]);
 
-    // const addToCart = (title) => {
-    //     setCartItems((prevItems) => [...prevItems, title]);
-    //     Alert.alert('Item Added to Cart');
-    // };
+    const addToCart = (title) => {
+        setCartItems((prevItems) => [...prevItems, title]);
+        Alert.alert('Item Added to Cart');
+    };
 
-    // const viewCart = () => {
-    //     if (cartItems.length > 0) {
-    //         const cartList = cartItems.join('\n'); // Create a newline-separated string
-    //         Alert.alert('Your Shopping Cart', cartList + '\n\nCheck Out');
-    //     } else {
-    //         Alert.alert('Your Shopping Cart', 'is empty!');
-    //     }
-    // };
+    const viewCart = () => {
+        if (cartItems.length > 0) {
+            const cartList = cartItems.join('\n');
+            Alert.alert('Your Shopping Cart', cartList + '\n\nCheck Out');
+        } else {
+            Alert.alert('Your Shopping Cart', 'is empty!');
+        }
+    };
     const renderItem = ({ item, index, section }) => (
         <View style={styles.card}>
             <Image source={{uri:item.image}} style={styles.image} />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.title}>S${item.price}</Text>
-            <TouchableOpacity
-                style={styles.buttonStyle}
+            <TouchableOpacity style={styles.buttonStyle} onPress={() => addToCart(item.title)}>
+                <Text style={styles.buttonText}>Add to Cart</Text>
+            </TouchableOpacity>
+            <Icon
+                style={styles.edit}
+                name="circle-edit-outline"
                 onPress={() => {
                     navigation.navigate("Edit", {
                         index: index,
@@ -131,8 +153,8 @@ const Home = ({navigation}) => {
                     });
                 }}
             >
-                <Text style={styles.buttonText}>Edit</Text>
-            </TouchableOpacity>
+                <Text>Edit</Text>
+            </Icon>
         </View>
     );
     return (
@@ -148,6 +170,8 @@ const Home = ({navigation}) => {
                 <Button title="Add new game" onPress={() => {
                     navigation.navigate("Add");
                 }}/>
+
+                <Button title="View Cart" onPress={() => {viewCart()}}/>
             </View>
         </View>
     );
